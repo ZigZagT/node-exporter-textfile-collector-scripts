@@ -180,6 +180,9 @@ device_list="$(/usr/sbin/smartctl --scan-open | awk '/^\/dev/{print $1 "|" $3}')
 for device in ${device_list}; do
   disk="$(echo "${device}" | cut -f1 -d'|')"
   type="$(echo "${device}" | cut -f2 -d'|')"
+  if [[ "$type" == nvme* ]]; then
+    continue
+  fi
   active=1
   echo "smartctl_run{disk=\"${disk}\",type=\"${type}\"}" "$(TZ=UTC date '+%s')"
   # Check if the device is in a low-power mode
